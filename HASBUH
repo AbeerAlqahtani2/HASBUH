@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HASBUH</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top-bar">
+    <div class="logo-area">
+        <!-- ضعي صورة الشعار في نفس المجلد باسم logo.png -->
+        <img src="logo.png" alt="HASBUH Logo">
+        <span class="logo-text">HASBUH</span>
+    </div>
+</header>
+
+<main class="layout">
+
+    <!-- جزء تعريفي بسيط بدون شرح مطوّل -->
+    <section class="hero-card">
+        <h1>HASBUH</h1>
+        <h2>لوحة سحابية</h2>
+        <div class="hero-cloud">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
+    </section>
+
+    <!-- جزء التطبيق (تسجيل دخول + الملفات) -->
+    <section class="app-card">
+
+        <div class="login-box" id="loginBox">
+            <h3>تسجيل الدخول</h3>
+            <input id="email" type="email" placeholder="البريد الإلكتروني">
+            <input id="password" type="password" placeholder="كلمة المرور">
+            <button onclick="login()">دخول</button>
+        </div>
+
+        <div class="files-box" id="filesBox" style="display:none;">
+            <div class="files-header">
+                <h3>ملفاتي</h3>
+                <button class="logout-btn" onclick="logout()">خروج</button>
+            </div>
+
+            <div class="upload-row">
+                <input type="file" id="fileInput">
+                <button onclick="uploadFile()">رفع</button>
+            </div>
+
+            <ul id="fileList" class="file-list"></ul>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <span>HASBUH ©</span>
+</footer>
+
+<script src="app.js"></script>
+
+</body>
+</html>
+
+:root {
+    --navy: #021427;
+    --cyan: #26C6DA;
+    --bg-light: #F5F7FB;
+    --text-main: #0f172a;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Tahoma", system-ui;
+    direction: rtl;
+    background: var(--bg-light);
+    color: var(--text-main);
+}
+
+/* شريط علوي */
+
+.top-bar {
+    background: var(--navy);
+    color: white;
+    padding: 10px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-area img {
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.logo-text {
+    font-size: 20px;
+    letter-spacing: 2px;
+    color: var(--cyan);
+}
+
+/* تخطيط أساسي */
+
+.layout {
+    min-height: calc(100vh - 90px);
+    padding: 32px 16px;
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 800px) {
+    .layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* بطاقة التعريف */
+
+.hero-card {
+    background: var(--navy);
+    color: white;
+    border-radius: 18px;
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 18px 35px rgba(0,0,0,0.25);
+}
+
+.hero-card h1 {
+    margin: 0;
+    font-size: 40px;
+    letter-spacing: 4px;
+    color: var(--cyan);
+}
+
+.hero-card h2 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 22px;
+    opacity: 0.9;
+}
+
+.hero-cloud {
+    margin-top: 24px;
+    width: 160px;
+    height: 90px;
+    border-radius: 60px;
+    background: linear-gradient(135deg, #0a3a66, #0b5683);
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 12px;
+}
+
+.hero-cloud::before,
+.hero-cloud::after {
+    content: "";
+    position: absolute;
+    background: #0b5683;
+    border-radius: 50%;
+    top: -26px;
+}
+
+.hero-cloud::before {
+    width: 70px; height: 70px;
+    left: 24px;
+}
+
+.hero-cloud::after {
+    width: 50px; height: 50px;
+    right: 26px;
+}
+
+.hero-cloud .dot {
+    width: 6px;
+    height: 20px;
+    background: var(--cyan);
+    border-radius: 999px;
+    animation: pulseDot 1.5s infinite ease-in-out;
+}
+
+.hero-cloud .dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+.hero-cloud .dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes pulseDot {
+    0%,100% { transform: translateY(0); opacity: 0.7; }
+    50% { transform: translateY(-6px); opacity: 1; }
+}
+
+/* بطاقة التطبيق */
+
+.app-card {
+    background: white;
+    border-radius: 18px;
+    padding: 24px 20px;
+    box-shadow: 0 10px 24px rgba(15,23,42,0.10);
+}
+
+/* صندوق تسجيل الدخول / الملفات */
+
+.login-box, .files-box {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.login-box h3, .files-box h3 {
+    margin: 0 0 6px;
+}
+
+input[type="email"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid #d0d7e2;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px 14px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.login-box button,
+.upload-row button {
+    background: var(--cyan);
+    color: var(--navy);
+}
+
+.login-box button:hover,
+.upload-row button:hover {
+    opacity: 0.9;
+}
+
+.files-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logout-btn {
+    background: transparent;
+    border: 1px solid #d0d7e2;
+    color: #1f2937;
+    padding-inline: 10px;
+}
+
+/* صف رفع الملف */
+
+.upload-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+/* قائمة الملفات */
+
+.file-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 0;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.file-list li {
+    background: #f3f4f7;
+    border-radius: 10px;
+    padding: 8px 10px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.file-list a {
+    text-decoration: none;
+    color: var(--navy);
+}
+
+/* فوتر */
+
+.footer {
+    text-align: center;
+    padding: 10px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+// دخول تجريبي فقط للعرض
+window.login = function () {
+    const email = document.getElementById("email").value.trim();
+    const pass  = document.getElementById("password").value.trim();
+
+    if (!email || !pass) {
+        alert("أدخلي البريد وكلمة المرور");
+        return;
+    }
+
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("filesBox").style.display = "flex";
+};
+
+// خروج
+window.logout = function () {
+    document.getElementById("filesBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "flex";
+};
+
+// رفع ملف (محلياً فقط)
+window.uploadFile = function () {
+    const input = document.getElementById("fileInput");
+    const file  = input.files[0];
+
+    if (!file) {
+        alert("اختاري ملفًا أولاً");
+        return;
+    }
+
+    const list  = document.getElementById("fileList");
+    const li    = document.createElement("li");
+
+    const link = document.createElement("a");
+    link.textContent = file.name;
+    link.href = URL.createObjectURL(file);
+    link.target = "_blank";
+
+    const status = document.createElement("span");
+    status.textContent = "جاهز";
+
+    li.appendChild(link);
+    li.appendChild(status);
+    list.appendChild(li);
+
+    input.value = "";
+};
